@@ -13,14 +13,12 @@ const PAGE_TITLES: Record<string, string> = {
   "/adhkar": "Adhkar",
   "/dua": "Dua",
   "/prayer": "Prayer Times",
-  "/ai": "AI Assistant",
 };
 
 export function Header() {
   const pathname = usePathname();
   const [searchOpen, setSearchOpen] = useState(false);
 
-  // Determine page title
   const title =
     PAGE_TITLES[pathname] ??
     Object.entries(PAGE_TITLES).find(([key]) => key !== "/" && pathname.startsWith(key))?.[1] ??
@@ -41,7 +39,6 @@ export function Header() {
 
           {/* Actions */}
           <div className="flex items-center gap-2 ml-auto">
-            {/* Search */}
             <button
               onClick={() => setSearchOpen(true)}
               className="flex items-center gap-2 px-3 py-2 rounded-lg bg-[var(--elevated)] border border-[var(--border)] text-[var(--text-muted)] text-sm hover:border-[var(--primary)]/30 transition-colors"

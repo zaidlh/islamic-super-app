@@ -92,7 +92,6 @@ export default async function HomePage() {
             { href: "/adhkar", icon: "🤲", title: "Adhkar", subtitle: "Daily Remembrance", color: "from-purple-900/40 to-purple-950/20" },
             { href: "/prayer", icon: "🕌", title: "Prayer Times", subtitle: "With Qibla", color: "from-amber-900/40 to-amber-950/20" },
             { href: "/dua", icon: "💫", title: "Dua", subtitle: "Hisnul Muslim", color: "from-rose-900/40 to-rose-950/20" },
-            { href: "/ai", icon: "🤖", title: "AI Assistant", subtitle: "Islamic Q&A", color: "from-cyan-900/40 to-cyan-950/20" },
           ].map((item) => (
             <Link
               key={item.href}

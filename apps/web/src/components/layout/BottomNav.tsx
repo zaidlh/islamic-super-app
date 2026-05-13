@@ -9,7 +9,7 @@ const NAV_ITEMS = [
   { href: "/quran", label: "Quran", icon: "📖" },
   { href: "/prayer", label: "Prayer", icon: "🕌" },
   { href: "/adhkar", label: "Adhkar", icon: "🤲" },
-  { href: "/ai", label: "AI", icon: "🤖" },
+  { href: "/dua", label: "Dua", icon: "💫" },
 ];
 
 export function BottomNav() {

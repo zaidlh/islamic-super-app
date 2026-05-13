@@ -11,7 +11,6 @@ const NAV_ITEMS = [
   { href: "/adhkar", label: "Adhkar", icon: "🤲", ar: "الأذكار" },
   { href: "/dua", label: "Dua", icon: "💫", ar: "الدعاء" },
   { href: "/prayer", label: "Prayer Times", icon: "🕌", ar: "الصلاة" },
-  { href: "/ai", label: "AI Assistant", icon: "🤖", ar: "المساعد" },
 ];
 
 export function Sidebar() {

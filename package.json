@@ -1,0 +1,21 @@
+{
+  "name": "islamic-super-app",
+  "private": true,
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "test": "turbo run test",
+    "lint": "turbo run lint",
+    "sync:quran": "tsx scripts/sync-quran.ts",
+    "sync:hadith": "tsx scripts/sync-hadith.ts",
+    "sync:adhkar": "tsx scripts/sync-adhkar.ts",
+    "sync:all": "pnpm sync:quran && pnpm sync:hadith && pnpm sync:adhkar"
+  },
+  "devDependencies": {
+    "turbo": "^2.0.0",
+    "typescript": "^5.4.0",
+    "tsx": "^4.7.0",
+    "@types/node": "^20.0.0"
+  },
+  "packageManager": "pnpm@9.0.0"
+}

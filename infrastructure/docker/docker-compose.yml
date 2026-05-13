@@ -1,0 +1,96 @@
+version: "3.9"
+
+services:
+  # ── Next.js Web App ──────────────────────────────────────────────────────────
+  web:
+    build:
+      context: ../..
+      dockerfile: infrastructure/docker/Dockerfile.web
+    image: islamic-super-app-web:latest
+    container_name: islamic-app-web
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - NEXT_PUBLIC_API_URL=http://backend:3001
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - OPENAI_MODEL=${OPENAI_MODEL:-gpt-4o-mini}
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - islamic-app-network
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # ── Express Backend API ──────────────────────────────────────────────────────
+  backend:
+    build:
+      context: ../..
+      dockerfile: infrastructure/docker/Dockerfile.backend
+    image: islamic-super-app-backend:latest
+    container_name: islamic-app-backend
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=production
+      - PORT=3001
+      - NEXT_PUBLIC_APP_URL=http://web:3000
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - RATE_LIMIT_MAX=100
+      - RATE_LIMIT_WINDOW_MS=60000
+    restart: unless-stopped
+    networks:
+      - islamic-app-network
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:3001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+
+  # ── Redis (optional - for caching) ──────────────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    container_name: islamic-app-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    restart: unless-stopped
+    networks:
+      - islamic-app-network
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+    profiles:
+      - with-cache
+
+  # ── Nginx Reverse Proxy ──────────────────────────────────────────────────────
+  nginx:
+    image: nginx:1.25-alpine
+    container_name: islamic-app-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - web
+      - backend
+    restart: unless-stopped
+    networks:
+      - islamic-app-network
+    profiles:
+      - with-proxy
+
+networks:
+  islamic-app-network:
+    name: islamic-app-network
+    driver: bridge
+
+volumes:
+  redis-data:
+    name: islamic-app-redis-data

@@ -1,0 +1,100 @@
+name: Sync Islamic Content Data
+
+on:
+  schedule:
+    # Run every Sunday at 2 AM UTC
+    - cron: "0 2 * * 0"
+  workflow_dispatch:
+    inputs:
+      sync_target:
+        description: "Which data to sync"
+        required: false
+        default: "all"
+        type: choice
+        options:
+          - all
+          - quran
+          - hadith
+          - adhkar
+
+env:
+  NODE_VERSION: "20"
+  PNPM_VERSION: "9.0.0"
+
+jobs:
+  sync-data:
+    name: Sync Islamic Content
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Sync Quran data
+        if: inputs.sync_target == 'all' || inputs.sync_target == 'quran'
+        run: pnpm sync:quran
+        continue-on-error: true
+
+      - name: Sync Hadith data
+        if: inputs.sync_target == 'all' || inputs.sync_target == 'hadith'
+        run: pnpm sync:hadith
+        continue-on-error: true
+
+      - name: Sync Adhkar data
+        if: inputs.sync_target == 'all' || inputs.sync_target == 'adhkar'
+        run: pnpm sync:adhkar
+        continue-on-error: true
+
+      - name: Validate data
+        run: pnpm tsx scripts/validate-data.ts
+        continue-on-error: true
+
+      - name: Check for changes
+        id: git-check
+        run: |
+          git diff --quiet content/ || echo "changed=true" >> $GITHUB_OUTPUT
+
+      - name: Commit and push updated data
+        if: steps.git-check.outputs.changed == 'true'
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "GitHub Actions Bot"
+          git add content/
+          git commit -m "chore: sync Islamic content data [$(date -u +%Y-%m-%d)]"
+          git push
+
+      - name: Upload data artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: islamic-content-data
+          path: content/
+          retention-days: 30
+
+      - name: Summary
+        run: |
+          echo "## 🕌 Data Sync Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Directory | Files |" >> $GITHUB_STEP_SUMMARY
+          echo "|-----------|-------|" >> $GITHUB_STEP_SUMMARY
+          for dir in quran hadith adhkar dua; do
+            count=$(ls content/$dir/ 2>/dev/null | wc -l || echo 0)
+            echo "| content/$dir | $count files |" >> $GITHUB_STEP_SUMMARY
+          done

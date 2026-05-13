@@ -10,10 +10,6 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@islamic-app/shared": "workspace:*",
-    "@islamic-app/quran-engine": "workspace:*",
-    "@islamic-app/hadith-engine": "workspace:*",
-    "@islamic-app/ui": "workspace:*",
     "next": "14.2.3",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",

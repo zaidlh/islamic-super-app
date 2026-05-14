@@ -58,8 +58,8 @@ const PRAYER_DISPLAY_NAMES: Record<string, { en: string; ar: string }> = {
   Isha: { en: "Isha", ar: "العشاء" },
 };
 
-export function parsePrayerTimes(timings: PrayerTimings): PrayerWithCountdown[] {
-  const t = timings as unknown as Record<string, string>;
+export function parsePrayerTimes(timings: PrayerTimings | Record<string, string>): PrayerWithCountdown[] {
+  const t = timings as Record<string, string>;
   const prayerKeys = ["Fajr", "Sunrise", "Dhuhr", "Asr", "Maghrib", "Isha"];
   const now = new Date();
 

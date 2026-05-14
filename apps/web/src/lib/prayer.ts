@@ -1,4 +1,4 @@
-import type { AladhanResponse, PrayerWithCountdown, GeoLocation } from "@/types/prayer";
+import type { AladhanResponse, PrayerTimings, PrayerWithCountdown, GeoLocation } from "@/types/prayer";
 import { parseTime, getTimeUntil } from "./utils";
 
 const ALADHAN_BASE = "https://api.aladhan.com/v1";
@@ -58,12 +58,13 @@ const PRAYER_DISPLAY_NAMES: Record<string, { en: string; ar: string }> = {
   Isha: { en: "Isha", ar: "العشاء" },
 };
 
-export function parsePrayerTimes(timings: Record<string, string> | import("./../types/prayer").PrayerTimings): PrayerWithCountdown[] {
+export function parsePrayerTimes(timings: PrayerTimings): PrayerWithCountdown[] {
+  const t = timings as unknown as Record<string, string>;
   const prayerKeys = ["Fajr", "Sunrise", "Dhuhr", "Asr", "Maghrib", "Isha"];
   const now = new Date();
 
   const prayers = prayerKeys.map((key) => {
-    const timeStr = timings[key] ?? "00:00";
+    const timeStr = t[key] ?? "00:00";
     const timestamp = parseTime(timeStr);
     const displayNames = PRAYER_DISPLAY_NAMES[key];
 

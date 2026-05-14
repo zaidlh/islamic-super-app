@@ -3,7 +3,6 @@
 import { useState, useCallback } from "react";
 import { HAJJ_STEPS, HajjStep } from "@/data/hajj";
 
-export const metadata = undefined;
 
 export default function HajjPage() {
   const [activeTab, setActiveTab] = useState<"hajj" | "umrah">("hajj");

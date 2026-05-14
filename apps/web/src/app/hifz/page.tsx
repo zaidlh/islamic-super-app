@@ -2,7 +2,6 @@
 
 import { useState, useCallback } from "react";
 
-export const metadata = undefined;
 
 type Status = "not_started" | "learning" | "memorized" | "needs_review";
 

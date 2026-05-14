@@ -2,7 +2,6 @@
 
 import { useState, useCallback, useMemo } from "react";
 
-export const metadata = undefined;
 
 type FastType = "obligatory" | "voluntary" | null;
 type FastRecord = { type: FastType; note?: string };

@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useCallback } from "react";
 
-export const metadata = undefined; // client component
 
 const JUZS = Array.from({ length: 30 }, (_, i) => ({
   number: i + 1,

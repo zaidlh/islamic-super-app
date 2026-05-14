@@ -84,7 +84,7 @@ const MODULE_SECTIONS = [
 
 export default async function HomePage() {
   const { chapters, prayer, hadith } = await getDashboardData();
-  const prayers = prayer ? parsePrayerTimes(prayer.timings) : [];
+  const prayers = prayer ? parsePrayerTimes(prayer.timings as Record<string, string>) : [];
   const nextPrayer = prayers.find((p) => p.isNext);
   const hijri = prayer?.date?.hijri;
 

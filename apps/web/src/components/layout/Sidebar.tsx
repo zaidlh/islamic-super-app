@@ -1,16 +1,53 @@
 "use client";
-
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 
-const NAV_ITEMS = [
-  { href: "/", label: "Home", icon: "🏠", ar: "الرئيسية" },
-  { href: "/quran", label: "Quran", icon: "📖", ar: "القرآن" },
-  { href: "/hadith", label: "Hadith", icon: "📚", ar: "الحديث" },
-  { href: "/adhkar", label: "Adhkar", icon: "🤲", ar: "الأذكار" },
-  { href: "/dua", label: "Dua", icon: "💫", ar: "الدعاء" },
-  { href: "/prayer", label: "Prayer Times", icon: "🕌", ar: "الصلاة" },
+const NAV_SECTIONS = [
+  {
+    label: "Core",
+    items: [
+      { href: "/", label: "Home", icon: "🏠", ar: "الرئيسية" },
+      { href: "/quran", label: "Quran", icon: "📖", ar: "القرآن" },
+      { href: "/tafsir", label: "Tafsir", icon: "🔬", ar: "التفسير" },
+      { href: "/hadith", label: "Hadith", icon: "📚", ar: "الحديث" },
+      { href: "/adhkar", label: "Adhkar", icon: "🤲", ar: "الأذكار" },
+      { href: "/dua", label: "Dua", icon: "💫", ar: "الدعاء" },
+      { href: "/prayer", label: "Prayer Times", icon: "🕌", ar: "الصلاة" },
+    ],
+  },
+  {
+    label: "Knowledge",
+    items: [
+      { href: "/names", label: "99 Names", icon: "✨", ar: "أسماء الله" },
+      { href: "/prophets", label: "Prophets", icon: "🌟", ar: "الأنبياء" },
+      { href: "/seerah", label: "Seerah", icon: "📜", ar: "السيرة" },
+      { href: "/calendar", label: "Hijri Calendar", icon: "📅", ar: "التقويم" },
+      { href: "/tajweed", label: "Tajweed", icon: "🎵", ar: "التجويد" },
+      { href: "/quiz", label: "Islamic Quiz", icon: "🎯", ar: "مسابقة" },
+    ],
+  },
+  {
+    label: "Tools",
+    items: [
+      { href: "/zakat", label: "Zakat Calc", icon: "💰", ar: "الزكاة" },
+      { href: "/ramadan", label: "Ramadan", icon: "🌙", ar: "رمضان" },
+      { href: "/hajj", label: "Hajj & Umrah", icon: "🕋", ar: "الحج" },
+      { href: "/fasting", label: "Fasting", icon: "☀️", ar: "الصيام" },
+      { href: "/tracker", label: "Ibadah Tracker", icon: "📊", ar: "المتابعة" },
+      { href: "/hifz", label: "Hifz Tracker", icon: "📿", ar: "الحفظ" },
+      { href: "/goals", label: "Goals", icon: "🎯", ar: "الأهداف" },
+    ],
+  },
+  {
+    label: "Library",
+    items: [
+      { href: "/translations", label: "Translations", icon: "🌍", ar: "الترجمات" },
+      { href: "/reciters", label: "Reciters", icon: "🎙️", ar: "القراء" },
+      { href: "/journal", label: "Journal", icon: "📓", ar: "المذكرة" },
+      { href: "/search", label: "Search", icon: "🔍", ar: "البحث" },
+    ],
+  },
 ];
 
 export function Sidebar() {
@@ -34,36 +71,35 @@ export function Sidebar() {
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
-        {NAV_ITEMS.map((item) => {
-          const isActive =
-            item.href === "/"
-              ? pathname === "/"
-              : pathname.startsWith(item.href);
-
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={cn(
-                "nav-link",
-                isActive && "nav-link-active"
-              )}
-            >
-              <span className="text-lg flex-shrink-0">{item.icon}</span>
-              <span className="flex-1">{item.label}</span>
-              <span
-                className={cn(
-                  "text-xs font-arabic",
-                  isActive ? "text-[var(--primary)]" : "text-[var(--text-subtle)]"
-                )}
-                dir="rtl"
-              >
-                {item.ar}
-              </span>
-            </Link>
-          );
-        })}
+      <nav className="flex-1 p-3 overflow-y-auto space-y-4">
+        {NAV_SECTIONS.map((section) => (
+          <div key={section.label}>
+            <p className="text-xs font-semibold text-[var(--text-subtle)] uppercase tracking-wider px-2 mb-1">
+              {section.label}
+            </p>
+            <div className="space-y-0.5">
+              {section.items.map((item) => {
+                const isActive = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className={cn("nav-link", isActive && "nav-link-active")}
+                  >
+                    <span className="text-base flex-shrink-0">{item.icon}</span>
+                    <span className="flex-1 text-sm">{item.label}</span>
+                    <span
+                      className={cn("text-xs font-arabic", isActive ? "text-[var(--primary)]" : "text-[var(--text-subtle)]")}
+                      dir="rtl"
+                    >
+                      {item.ar}
+                    </span>
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        ))}
       </nav>
 
       {/* Footer */}
